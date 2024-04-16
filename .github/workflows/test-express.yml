@@ -3,7 +3,7 @@ name: Express Tests
 on:
   push:
     branches:
-      - main  
+      - master  
 
 jobs:
   basic-ubuntu-20:
