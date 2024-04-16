@@ -1,0 +1,14 @@
+name: Express Tests
+run-name: ${{ github.actor }} is running express tests 
+on: [push]
+jobs:
+    basic-ubuntu-20:
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+  
+        - name: Express Tests
+          run: |
+            npm install
+            npm test
