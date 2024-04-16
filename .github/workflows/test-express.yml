@@ -1,26 +1,23 @@
-name: Express Tests
-
-on:
-  push:
-    branches:
-      - master  
-
+name: Cypress Tests
+run-name: ${{ github.actor }} is running Cypress tests 
+on: [push]
 jobs:
-  basic-ubuntu-20:
-    runs-on: ubuntu-20.04
+    basic-ubuntu-20:
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+  
+        - name: Cypress tests
+          run: npx cypress run
+          env:
+            CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: omarouafi/express-app-cypress:latest
+        - name: SSH and pull Docker image
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.SERVER_HOST }}
+            username: ${{ secrets.SERVER_USERNAME }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            script: docker pull omarouafi/express-app-cypress
+    
